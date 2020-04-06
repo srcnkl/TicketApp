@@ -15,16 +15,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@RestClientTest(FlightServiceTest.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
     @Mock
@@ -58,22 +61,22 @@ public class FlightServiceTest {
     public void it_should_create_a_flight() {
         //given
         FlightCreateRequest flightCreateRequest = FlightCreateRequest.builder().price(200.0).capacity(100).airlineId(1L).routeId(1L).build();
-        BDDMockito.given(iAirlineRepository.findById(1L)).willReturn(Optional.of(airline));
-        BDDMockito.given(iRouteRepository.findById(1L)).willReturn(Optional.of(route));
-        BDDMockito.given(iFlightRepository.save(Matchers.any())).willReturn(flight);
+        when(iAirlineRepository.findById(1L)).thenReturn(Optional.of(airline));
+        when(iRouteRepository.findById(1L)).thenReturn(Optional.of(route));
+        when(iFlightRepository.save(any())).thenReturn(flight);
         //when
         FlightResponse flightResponse = flightService.createFlight(flightCreateRequest);
         //then
-        Assert.assertEquals("1",flightResponse.getAirlineId());
-        Assert.assertEquals(flight.getPrice().toString(),flightResponse.getPrice().toString());
-        Assert.assertEquals("test",flightResponse.getDepartureName());
+        Assert.assertEquals("1", flightResponse.getAirlineId());
+        Assert.assertEquals(flight.getPrice().toString(), flightResponse.getPrice().toString());
+        Assert.assertEquals("test", flightResponse.getDepartureName());
 
     }
 
     @Test(expected = FlightNotFoundException.class)
     public void it_should_throw_an_exception_when_id_not_exist() {
         //given
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.empty());
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.empty());
         //when
         FlightResponse flightResponse = flightService.getFlightById(1L);
     }
@@ -81,12 +84,12 @@ public class FlightServiceTest {
     @Test
     public void it_should_return_a_flight_by_given_routeId() {
         //given
-        BDDMockito.given(iFlightRepository.findByRouteId(1L)).willReturn(flightList);
+        when(iFlightRepository.findByRouteId(1L)).thenReturn(flightList);
         //when
         List<FlightResponse> flightResponse = flightService.getFlightByRoute(1L);
         //then
         Assert.assertEquals(1, flightResponse.size());
-        Assert.assertEquals(flightList.get(0).getRoute().getId().toString(),flightResponse.get(0).getRouteId());
+        Assert.assertEquals(flightList.get(0).getRoute().getId().toString(), flightResponse.get(0).getRouteId());
     }
 
 
