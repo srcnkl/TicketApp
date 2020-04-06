@@ -85,6 +85,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>ticket-app-docker</finalName>
 	</build>
 
 </project>

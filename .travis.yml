@@ -1,0 +1,21 @@
+language: java
+jdk: openjdk8
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+- sh script/generate_cert.sh
+- mvn clean install -B
+sudo: required
+services:
+- docker
+after_success:
+- echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
+  fi`
+- export IMAGE_NAME=sercan/ticket_api
+- docker build -t $IMAGE_NAME:$COMMIT .
+- docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+- docker push $IMAGE_NAME
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::7}
