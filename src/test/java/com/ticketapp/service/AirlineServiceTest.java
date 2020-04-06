@@ -12,13 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@RestClientTest(AirlineServiceTest.class)
 @RunWith(MockitoJUnitRunner.class)
 public class AirlineServiceTest {
     @Mock
