@@ -65,9 +65,9 @@ public class FlightServiceTest {
         //when
         FlightResponse flightResponse = flightService.createFlight(flightCreateRequest);
         //then
-        Assert.assertEquals("1",flightResponse.getAirlineId());
-        Assert.assertEquals(flight.getPrice().toString(),flightResponse.getPrice().toString());
-        Assert.assertEquals("test",flightResponse.getDepartureName());
+        Assert.assertEquals("1", flightResponse.getAirlineId());
+        Assert.assertEquals(flight.getPrice().toString(), flightResponse.getPrice().toString());
+        Assert.assertEquals("test", flightResponse.getDepartureName());
 
     }
 
@@ -87,7 +87,7 @@ public class FlightServiceTest {
         List<FlightResponse> flightResponse = flightService.getFlightByRoute(1L);
         //then
         Assert.assertEquals(1, flightResponse.size());
-        Assert.assertEquals(flightList.get(0).getRoute().getId().toString(),flightResponse.get(0).getRouteId());
+        Assert.assertEquals(flightList.get(0).getRoute().getId().toString(), flightResponse.get(0).getRouteId());
     }
 
 
