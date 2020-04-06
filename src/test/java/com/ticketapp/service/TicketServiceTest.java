@@ -16,13 +16,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TicketServiceTest {
@@ -55,9 +56,9 @@ public class TicketServiceTest {
     @Test
     public void it_should_create_a_ticket() {
 
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.of(flight));
-        BDDMockito.given(iFlightRepository.save(flight)).willReturn(flight);
-        BDDMockito.given(iTicketRepository.save(Matchers.any())).willReturn(ticket);
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.of(flight));
+        when(iFlightRepository.save(flight)).thenReturn(flight);
+        when(iTicketRepository.save(any())).thenReturn(ticket);
         //when
         TicketResponse ticketResponse = ticketService.createTicket(ticketRequest);
         //then
@@ -73,14 +74,12 @@ public class TicketServiceTest {
         flight = Flight.builder().capacity(100).id(1L).updatedPrice(100.0).price(100.0).passengerCount(10).route(route).airline(airline).build();
         TicketRequest ticketRequest = TicketRequest.builder().flightId(1L).price(110.0).build();
         Ticket ticket = Ticket.builder().id(1L).flight(flight).price(110.0).build();
-
         //then
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.of(flight));
-        BDDMockito.given(iFlightRepository.save(flight)).willReturn(flight);
-        BDDMockito.given(iTicketRepository.save(Matchers.any())).willReturn(ticket);
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.of(flight));
+        when(iFlightRepository.save(flight)).thenReturn(flight);
+        when(iTicketRepository.save(any())).thenReturn(ticket);
 
         TicketResponse ticketResponse = ticketService.createTicket(ticketRequest);
-
         Assert.assertEquals(110, 0, ticketResponse.getPrice());
         Assert.assertEquals(ticket.getId().toString(), ticketResponse.getId());
     }
@@ -91,11 +90,10 @@ public class TicketServiceTest {
         flight = Flight.builder().capacity(100).id(1L).updatedPrice(100.0).price(100.0).passengerCount(20).route(route).airline(airline).build();
         TicketRequest ticketRequest = TicketRequest.builder().flightId(1L).price(120.0).build();
         Ticket ticket = Ticket.builder().id(1L).flight(flight).price(120.0).build();
-
         //then
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.of(flight));
-        BDDMockito.given(iFlightRepository.save(flight)).willReturn(flight);
-        BDDMockito.given(iTicketRepository.save(Matchers.any())).willReturn(ticket);
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.of(flight));
+        when(iFlightRepository.save(flight)).thenReturn(flight);
+        when(iTicketRepository.save(any())).thenReturn(ticket);
 
         TicketResponse ticketResponse = ticketService.createTicket(ticketRequest);
 
@@ -107,8 +105,8 @@ public class TicketServiceTest {
     @Test
     public void passenger_count_should_be_decrease_when_ticket_is_cancel() {
         //given
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.of(flight));
-        BDDMockito.given(iTicketRepository.findById(1L)).willReturn(Optional.of(ticket));
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.of(flight));
+        when(iTicketRepository.findById(1L)).thenReturn(Optional.of(ticket));
         //when
         ticketService.cancelTicket(1L);
         //then
@@ -119,12 +117,11 @@ public class TicketServiceTest {
     @Test(expected = TimeoutException.class)
     public void should_throw_TimeOutException_when_ticket_flight_change_in_background() {
         flight = Flight.builder().capacity(100).id(1L).updatedPrice(200.0).price(200.0).passengerCount(20).route(route).airline(airline).build();
-
-        BDDMockito.given(iFlightRepository.findById(1L)).willReturn(Optional.of(flight));
-        BDDMockito.given(iFlightRepository.save(flight)).willReturn(flight);
-        BDDMockito.given(iTicketRepository.save(Matchers.any())).willReturn(ticket);
         //when
-        TicketResponse ticketResponse = ticketService.createTicket(ticketRequest);
+        when(iFlightRepository.findById(1L)).thenReturn(Optional.of(flight));
+        when(iFlightRepository.save(flight)).thenReturn(flight);
+        //when
+        ticketService.createTicket(ticketRequest);
     }
 
 }

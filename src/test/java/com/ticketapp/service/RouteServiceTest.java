@@ -17,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.Optional;
 
@@ -46,8 +49,8 @@ public class RouteServiceTest {
     @Test
     public void  it_should_create_a_route(){
         //given
-        BDDMockito.given(routeRepository.save(Matchers.any())).willReturn(route);
-        BDDMockito.given(airportRepository.findById(1L)).willReturn(Optional.of(departureAirport)).willReturn(Optional.of(destinationAirport));//when
+        when(routeRepository.save(Matchers.any())).thenReturn(route);
+        when(airportRepository.findById(1L)).thenReturn(Optional.of(departureAirport)).thenReturn(Optional.of(destinationAirport));
         //then
         RouteResponse routeResponse=routeService.createRoute(routeRequest);
         //then
@@ -59,7 +62,7 @@ public class RouteServiceTest {
     @Test
     public void  it_should_return_airport_by_given_id(){
         //given
-        BDDMockito.given(routeRepository.findById(1L)).willReturn(Optional.of(route));
+        when(routeRepository.findById(1L)).thenReturn(Optional.of(route));
         //then
         RouteResponse routeResponse=routeService.getRoute(1L);
         //then
@@ -70,7 +73,7 @@ public class RouteServiceTest {
     @Test(expected = RouteNotFoundException.class)
     public void it_should_throw_an_exception_when_id_not_exist(){
         //given
-        BDDMockito.given(routeRepository.findById(1L)).willReturn(Optional.empty());
+        when(routeRepository.findById(1L)).thenReturn(Optional.empty());
         //then
         RouteResponse routeResponse=routeService.getRoute(1L);
     }
@@ -78,7 +81,7 @@ public class RouteServiceTest {
     @Test(expected = RouteNotFoundException.class)
     public void it_should_deleted_by_given_id(){
         //given
-        BDDMockito.given(routeRepository.findById(1L)).willReturn(Optional.of(route)).willReturn(Optional.empty());
+        when(routeRepository.findById(1L)).thenReturn(Optional.of(route)).thenReturn(Optional.empty());
         //then
         routeService.deleteRoute(1L);
         routeService.getRoute(1L);
