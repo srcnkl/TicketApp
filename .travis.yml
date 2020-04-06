@@ -3,7 +3,6 @@ jdk: openjdk8
 install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-- sh script/generate_cert.sh
 - mvn clean install -B
 sudo: required
 services:
