@@ -1,7 +1,5 @@
 ## TICKET APP :rocket:
 
-[![Build Status](https://travis-ci.com/srcnkl/TicketApp.svg?branch=master)](https://travis-ci.com/srcnkl/TicketApp)
-
 In Ticket App , airport , airline , route , flight and ticket can be created.
 
 User can search flight by using flight id , route id and airline id. 
